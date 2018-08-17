@@ -21,15 +21,23 @@ func main() {
 
 func handleDefault(w http.ResponseWriter, r *http.Request) {
 
-	buf, err := ioutil.ReadAll(r.Body)
+	var answer string
+	message := r.URL.Query().Get("msg")
 
-	if err != nil {
-		fmt.Printf("ERROR: %s\n", err)
-		fmt.Fprintf(w, "ERROR: %s\n", err)
-		return
+	if message != "" {
+		answer = message
+	} else {
+		buf, err := ioutil.ReadAll(r.Body)
+
+		if err != nil {
+			fmt.Printf("ERROR: %s\n", err)
+			fmt.Fprintf(w, "ERROR: %s\n", err)
+			return
+		}
+
+		answer = string(buf)
 	}
 
-	answer := string(buf)
 	fmt.Printf("ECHO: %s\n", answer)
 	fmt.Fprintf(w, "%s\n", answer)
 }
